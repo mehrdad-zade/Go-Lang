@@ -31,6 +31,10 @@ dynamically typed checked languauges such as Python are checked at run time.
 
 +arrays cannot be constants
 
++slices : it saves the values in a backing array. slice contains a header which has the address, length and capacity of the slice
+- a slice and array with the same items will have different sizes and always array will take more space because slice only has 3 elements
+- when you append new values to a slice, capacity will grow by 2^len of slice. this is if the capacity doesn't have enoigh space for the new item
+-you cannot assing a value to a slice with length zero, i.e. len(cities) == 0 => cities[0] = "Toronto" will fail
 */
 package main
 
@@ -249,7 +253,55 @@ func main() {
 			}
 			fmt.Printf("array %d has length %d \n", numbers4, len(numbers4))
 
+			fmt.Println("---------------Slices--------------\n")
+			//slices
+			var citiez []string
+			fmt.Printf("citiez type is : %#v, and the length is %d \n", citiez, len(citiez))
+			//citiez[0] = "toronto" //this will fail because slice is empty
 
+			num5 := []int{1,2,3,4}
+			
+
+			num6 := make([]int, 2) // make function take a type and length
+			fmt.Printf("num6 type is %#v \n", num6)
+
+			num7 := append(num5, num6...) //... is required for concat
+			fmt.Printf("concat num5 and num6 = %d \n", num7)
+
+			/*
+			num8 := num5
+			fmt.Println("is num5 and num8 comparable? ", num8==num5)//this will through an error because slices cannot be compared like this
+			*/
+
+			fmt.Println("print part of num7", num7[1:3])//index 1 is included, and 3 is excluded
+			fmt.Println("print part of num7", num7[1:]) //[2,3,4,0,0]
+			fmt.Println("print part of num7", num7[:3]) //[1,2,3]
+			fmt.Println("print part of num7", num7[:]) //entire num7
+			fmt.Println("print part of num7", append(num7[:3], 100)) // [1,2,3,100]
+
+			fmt.Printf("num7 before change is : %d\n", num7)
+			num9, num10 := num7[1:3], num7[0:2]
+			num10[1] = 500//this will modify num9 and num7 
+			num11 := []int{}
+			num11 = append(num11, num7[0:3]...)
+			num7[0] = 999 //num11 won't get modified because it was declared with its own type
+			fmt.Printf("num7 is : %d\nnum9 is : %d\nnum10 is : %d\nnum11 is : %d\n", num7, num9, num10, num11)
+			fmt.Println(len(num9), cap(num9)) // 2 7 -> length is 2, but backing array has a cap of 5, because num7 has up to index 5
+			fmt.Printf("%p, % \n", &num7, &num9) // both will have the same address
+			/*
+			output:
+			num7 before change is : [1 2 3 100 0 0]
+			num7 is : [999 500 3 100 0 0]
+			num9 is : [500 3]
+			num10 is : [999 500]
+			num11 is : [1 500 3]
+			*/
+
+
+			n1 := []int{10, 20, 30, 40, 50}
+		    n2 := append(n1, 100)
+		    n2[0] = 66
+		    fmt.Println(n1) // [10 20 30 40 50]
 
 
 }
